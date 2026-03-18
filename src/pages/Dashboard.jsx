@@ -10,6 +10,7 @@ function Dashboard(){
  const [uploading, setUploading] = useState(false)
  const [message, setMessage] = useState({ type: '', text: '' })
  const [missingSkills, setMissingSkills] = useState({})
+ const [searchQuery, setSearchQuery] = useState('')
  const fileInputRef = useRef(null)
  const messageTimeoutRef = useRef(null)
 
@@ -149,9 +150,23 @@ function Dashboard(){
   }
  }
 
+ const filteredJobs = jobs.filter(job => {
+  const q = searchQuery.trim().toLowerCase()
+  if (!q) return true
+  return (
+    job.companyName.toLowerCase().includes(q) ||
+    job.role.toLowerCase().includes(q) ||
+    (job.status || '').toLowerCase().includes(q)
+  )
+ })
+
+ const totalJobs = jobs.length
+ const verifiedJobs = jobs.filter(job => job.matchScore > 0).length
+ const resumeStatus = uploadedResume ? 'Uploaded' : 'Not uploaded'
+
  return(
 
-  <div className="min-h-screen bg-gray-100 p-10">
+  <div className="min-h-screen bg-linear-to-br from-blue-50 via-white to-rose-50 p-10">
 
    {message.text && (
     <div className={`mb-6 p-4 rounded-lg text-white font-semibold ${message.type === 'success' ? 'bg-green-500' : 'bg-red-500'}`}>
@@ -159,18 +174,59 @@ function Dashboard(){
     </div>
    )}
 
-   <h1 className="text-2xl font-bold mb-6">
-    Your Jobs
-   </h1>
-   <button
-    onClick={() => navigate('/addjob')}
-    className="mb-6 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded transition-colors duration-200"
-   >
-    + Add Job
-   </button>
+   <div className="grid grid-cols-1 lg:grid-cols-5 gap-5 mb-6">
+    <div className="lg:col-span-3 p-6 bg-white rounded-xl shadow-lg border border-gray-100">
+      <h1 className="text-3xl font-extrabold text-gray-800 mb-2">Recruitment Dashboard</h1>
+      <p className="text-sm text-gray-500">Manage jobs, resume analytics and match scores in one place. Make your career decisions smarter with AI insights.</p>
+    </div>
+    <div className="p-5 bg-white rounded-xl shadow-lg border border-gray-100 flex items-center justify-between">
+      <div>
+        <div className="text-xs uppercase tracking-wide text-gray-500">Total Jobs</div>
+        <div className="text-2xl font-bold text-blue-700">{totalJobs}</div>
+      </div>
+      <div className="bg-blue-100 text-blue-700 px-3 py-2 rounded-full">📊</div>
+    </div>
+    <div className="p-5 bg-white rounded-xl shadow-lg border border-gray-100 flex items-center justify-between">
+      <div>
+        <div className="text-xs uppercase tracking-wide text-gray-500">Matched Jobs</div>
+        <div className="text-2xl font-bold text-green-700">{verifiedJobs}</div>
+      </div>
+      <div className="bg-green-100 text-green-700 px-3 py-2 rounded-full">✅</div>
+    </div>
+    <div className="p-5 bg-white rounded-xl shadow-lg border border-gray-100 flex items-center justify-between">
+      <div>
+        <div className="text-xs uppercase tracking-wide text-gray-500">Resume</div>
+        <div className="text-2xl font-bold text-purple-700">{resumeStatus}</div>
+      </div>
+      <div className="bg-purple-100 text-purple-700 px-3 py-2 rounded-full">📄</div>
+    </div>
+   </div>
 
-   {/* Resume Upload Section */}
-   <div className="bg-white p-6 rounded-lg shadow-lg mb-8">
+   <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+     <div className="flex items-center gap-2 w-full sm:w-auto">
+       <input
+         value={searchQuery}
+         onChange={(e) => setSearchQuery(e.target.value)}
+         type="text"
+         placeholder="Search company, role, status..."
+         className="w-full max-w-xs px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+       />
+       <button
+         onClick={() => setSearchQuery('')}
+         className="px-3 py-2 text-sm rounded-lg border border-gray-300 bg-white hover:bg-gray-100"
+       >
+         Clear
+       </button>
+     </div>
+     <button
+       onClick={() => navigate('/addjob')}
+       className="px-6 py-2 bg-linear-to-r from-indigo-600 to-blue-600 text-white font-bold rounded-lg shadow-md hover:shadow-xl transition-all"
+     >
+       + Add Job
+     </button>
+   </div>
+
+   <div className="bg-white p-6 rounded-lg shadow-lg mb-8 border border-gray-100">
     <h2 className="text-xl font-semibold mb-4">Upload Resume</h2>
     <div className="flex items-center space-x-4">
       <input
@@ -198,7 +254,7 @@ function Dashboard(){
 
    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-    {jobs.map((job)=>(
+    {filteredJobs.length > 0 ? filteredJobs.map((job)=>(
      
      <div
       key={job._id}
@@ -279,7 +335,12 @@ function Dashboard(){
 
      </div>
 
-    ))}
+    )) : (
+      <div className="lg:col-span-3 col-span-1 text-center p-8 bg-white rounded-lg shadow-lg border border-gray-200">
+        <h3 className="text-lg font-semibold text-gray-700">No matching jobs found</h3>
+        <p className="text-sm text-gray-500 mt-2">Try changing your search or add a new job.</p>
+      </div>
+    )}
 
    </div>
 
