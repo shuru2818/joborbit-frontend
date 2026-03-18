@@ -9,7 +9,7 @@ function Navbar() {
     <nav className="bg-white shadow-md">
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
         <div className="flex items-center gap-6">
-          <h1 className="text-xl font-bold text-blue-600">JobTracker</h1>
+          <Link to="/" className="text-xl font-bold text-blue-600">JobOrbit</Link>
           <Link to="/" className="hover:text-blue-600">
             Home
           </Link>

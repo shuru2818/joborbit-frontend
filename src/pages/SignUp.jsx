@@ -15,7 +15,8 @@ const SignUp = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState('');
   const [fieldErrors, setFieldErrors] = useState({
     username: '',
     email: '',
@@ -105,9 +106,9 @@ const SignUp = () => {
 
     try {
       const res = await API.post("/auth/signup", formData);
-      console.log(res);
-      login(res.data);
-      navigate("/");
+      setRegisteredEmail(res.data?.email || formData.email);
+      setIsRegistered(true);
+      setError('');
     } catch (err) {
       console.log(err);
       setError(err.response?.data?.message || 'Registration failed. Please try again.');
@@ -116,7 +117,7 @@ const SignUp = () => {
     }
   }
 
-  if (success) {
+  if (isRegistered) {
     return (
       <div className="min-h-screen bg-linear-to-br from-green-50 via-white to-emerald-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8 text-center">
@@ -125,12 +126,17 @@ const SignUp = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="text-3xl font-extrabold text-gray-900">
-            Account Created!
-          </h2>
+          <h2 className="text-3xl font-extrabold text-gray-900">OTP Sent</h2>
           <p className="text-gray-600">
-            Your account has been successfully created. Redirecting to login...
+            An OTP was sent to <strong>{registeredEmail}</strong>. Enter it to verify your account.
           </p>
+          <button
+            onClick={() => navigate('/verify', { state: { email: registeredEmail } })}
+            className="mt-4 w-full inline-flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-linear-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700"
+          >
+            Verify OTP Now
+          </button>
+          <p className="text-sm text-gray-500 mt-2">If you didn’t receive it, please check spam or retry registration.</p>
         </div>
       </div>
     );
