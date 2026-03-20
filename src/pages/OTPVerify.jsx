@@ -9,12 +9,13 @@ const OTPVerify = () => {
   const { login } = useContext(AuthContext);
 
   const [email, setEmail] = useState("");
-  const [otp, setOtp] = useState("");
+  const [otpDigits, setOtpDigits] = useState(["", "", "", "", "", ""]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
   const [resendMessage, setResendMessage] = useState("");
+  const [resendCountdown, setResendCountdown] = useState(0);
 
   useEffect(() => {
     if (location.state?.email) {
@@ -22,12 +23,29 @@ const OTPVerify = () => {
     }
   }, [location.state]);
 
+  useEffect(() => {
+    if (resendCountdown <= 0) return;
+
+    const timer = setInterval(() => {
+      setResendCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [resendCountdown]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
-    if (!email || !otp) {
-      setError("Please provide both email and OTP.");
+    const otp = otpDigits.join("");
+    if (!email || otp.length !== 6) {
+      setError("Please provide your email and the 6-digit OTP.");
       return;
     }
 
@@ -44,9 +62,50 @@ const OTPVerify = () => {
     }
   };
 
+  const handleOtpChange = (index, value) => {
+    if (!/^\d?$/.test(value)) return;
+
+    const nextOtp = [...otpDigits];
+    nextOtp[index] = value;
+    setOtpDigits(nextOtp);
+
+    if (value && index < 5) {
+      const nextInput = document.getElementById(`otp-${index + 1}`);
+      nextInput?.focus();
+    }
+  };
+
+  const handleOtpKeyDown = (index, e) => {
+    if (e.key === "Backspace" && !otpDigits[index] && index > 0) {
+      const prevInput = document.getElementById(`otp-${index - 1}`);
+      prevInput?.focus();
+    }
+  };
+
+  const handleOtpPaste = (e) => {
+    e.preventDefault();
+    const paste = (e.clipboardData || window.clipboardData).getData("text");
+    const digits = paste.replace(/\D/g, "").slice(0, 6).split("");
+    if (digits.length === 0) return;
+    const nextOtp = [...otpDigits];
+    for (let i = 0; i < 6; i += 1) {
+      nextOtp[i] = digits[i] || "";
+    }
+    setOtpDigits(nextOtp);
+
+    const focusIndex = Math.min(digits.length, 5);
+    const nextInput = document.getElementById(`otp-${focusIndex}`);
+    nextInput?.focus();
+  };
+
   const handleResend = async () => {
     setError("");
     setResendMessage("");
+
+    if (resendCountdown > 0) {
+      setError(`Please wait ${resendCountdown} second${resendCountdown === 1 ? "" : "s"} before resending OTP.`);
+      return;
+    }
 
     if (!email) {
       setError("Please enter your email to resend OTP.");
@@ -57,6 +116,7 @@ const OTPVerify = () => {
     try {
       const res = await API.post("/auth/resend", { email });
       setResendMessage(res.data?.message || "OTP resent successfully.");
+      setResendCountdown(60);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to resend OTP. Please try again.");
     } finally {
@@ -98,34 +158,45 @@ const OTPVerify = () => {
               />
             </div>
 
-            <div className="flex justify-end text-sm">
+            <div className="flex justify-end items-center gap-2 text-sm">
               <button
                 type="button"
                 onClick={handleResend}
-                disabled={resendLoading}
+                disabled={resendLoading || resendCountdown > 0}
                 className="text-indigo-600 hover:text-indigo-800 disabled:text-gray-400"
               >
-                {resendLoading ? "Resending..." : "Resend OTP"}
+                {resendLoading
+                  ? "Resending..."
+                  : resendCountdown > 0
+                  ? `Resend OTP (${resendCountdown}s)`
+                  : "Resend OTP"}
               </button>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">OTP</label>
-              <input
-                value={otp}
-                onChange={(e) => setOtp(e.target.value)}
-                type="text"
-                inputMode="numeric"
-                maxLength={6}
-                required
-                placeholder="123456"
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
+              <div className="flex gap-2">
+                {otpDigits.map((digit, idx) => (
+                  <input
+                    key={idx}
+                    id={`otp-${idx}`}
+                    value={digit}
+                    onChange={(e) => handleOtpChange(idx, e.target.value)}
+                    onKeyDown={(e) => handleOtpKeyDown(idx, e)}
+                    onPaste={idx === 0 ? handleOtpPaste : undefined}
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={1}
+                    required
+                    className="w-12 h-12 text-center text-lg border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                ))}
+              </div>
             </div>
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || otpDigits.join("").length !== 6}
               className="w-full py-2.5 rounded-md bg-indigo-600 text-white font-medium hover:bg-indigo-700 disabled:opacity-50"
             >
               {loading ? "Verifying..." : "Verify OTP"}
