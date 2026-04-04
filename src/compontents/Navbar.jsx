@@ -9,18 +9,21 @@ function Navbar() {
   const toggleMenu = () => setIsOpen((prev) => !prev);
 
   return (
-    <nav className="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm">
+    <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-4">
-            <Link to="/" className="text-2xl font-bold text-blue-600">ApplySmart</Link>
+            <Link to="/" className="flex items-center gap-3">
+              <img src="/Logo.jpeg" alt="Job Orbit Logo" className="w-10 h-10 object-cover rounded-xl shadow-lg border border-gray-200" />
+              <span className="text-2xl font-bold bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Job Orbit</span>
+            </Link>
             <p className="hidden sm:block text-sm text-gray-500">AI job tracker</p>
           </div>
 
           <div className="flex items-center sm:hidden">
             <button
               onClick={toggleMenu}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="inline-flex items-center justify-center p-2 rounded-lg text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
               aria-label="Toggle navigation"
             >
               <svg className="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
@@ -38,27 +41,34 @@ function Navbar() {
           </div>
 
           <div className="hidden sm:flex sm:items-center sm:gap-6">
-            <Link to="/" className="text-sm font-medium text-gray-700 hover:text-blue-600">Home</Link>
-            <Link to="/dashboard" className="text-sm font-medium text-gray-700 hover:text-blue-600">Dashboard</Link>
-            <Link to="/addjob" className="text-sm font-medium text-gray-700 hover:text-blue-600">Add Job</Link>
-            <Link to="/upload-resume" className="text-sm font-medium text-gray-700 hover:text-blue-600">Upload Resume</Link>
+            <Link to="/" className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors">Home</Link>
+            <Link to="/dashboard" className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors">Dashboard</Link>
+            <Link to="/addjob" className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors">Add Job</Link>
+            <Link to="/upload-resume" className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors">Upload Resume</Link>
           </div>
 
           <div className="hidden sm:flex sm:items-center sm:gap-3">
             {user ? (
               <>
-                <span className="text-sm text-gray-600">Hello, {user.username || user.email}</span>
+                <div className="flex items-center gap-3 px-4 py-2 bg-gray-50 rounded-full">
+                  <div className="w-8 h-8 bg-linear-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center">
+                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                  </div>
+                  <span className="text-sm font-medium text-gray-700">{user.username || user.email}</span>
+                </div>
                 <button
                   onClick={logout}
-                  className="px-3 py-1.5 rounded-md border border-gray-300 hover:bg-gray-100 text-sm font-medium text-gray-700"
+                  className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors"
                 >
                   Logout
                 </button>
               </>
             ) : (
               <>
-                <Link to="/login" className="text-sm font-medium text-blue-600 hover:text-blue-500">Login</Link>
-                <Link to="/signup" className="text-sm font-medium text-white bg-blue-600 px-3 py-1.5 rounded-md hover:bg-blue-700">
+                <Link to="/login" className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors">Login</Link>
+                <Link to="/signup" className="text-sm font-medium text-white bg-linear-to-r from-blue-600 to-indigo-600 px-4 py-2 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg">
                   Sign Up
                 </Link>
               </>
@@ -68,27 +78,34 @@ function Navbar() {
       </div>
 
       {isOpen && (
-        <div className="sm:hidden absolute inset-x-0 top-full z-30 border-t border-gray-100 bg-white shadow-md">
+        <div className="sm:hidden absolute inset-x-0 top-full z-30 border-t border-gray-100 bg-white/95 backdrop-blur-sm shadow-lg">
           <div className="px-4 py-3 space-y-2">
-            <Link to="/" className="block text-gray-700 font-medium px-3 py-2 rounded hover:bg-gray-100" onClick={toggleMenu}>Home</Link>
-            <Link to="/dashboard" className="block text-gray-700 font-medium px-3 py-2 rounded hover:bg-gray-100" onClick={toggleMenu}>Dashboard</Link>
-            <Link to="/addjob" className="block text-gray-700 font-medium px-3 py-2 rounded hover:bg-gray-100" onClick={toggleMenu}>Add Job</Link>
-            <Link to="/upload-resume" className="block text-gray-700 font-medium px-3 py-2 rounded hover:bg-gray-100" onClick={toggleMenu}>Upload Resume</Link>
+            <Link to="/" className="block text-gray-700 font-medium px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors" onClick={toggleMenu}>Home</Link>
+            <Link to="/dashboard" className="block text-gray-700 font-medium px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors" onClick={toggleMenu}>Dashboard</Link>
+            <Link to="/addjob" className="block text-gray-700 font-medium px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors" onClick={toggleMenu}>Add Job</Link>
+            <Link to="/upload-resume" className="block text-gray-700 font-medium px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors" onClick={toggleMenu}>Upload Resume</Link>
             <div className="border-t border-gray-100" />
             {user ? (
               <>
-                <span className="block text-gray-600 px-3 py-2">Hello, {user.username || user.email}</span>
+                <div className="flex items-center gap-3 px-3 py-2">
+                  <div className="w-8 h-8 bg-linear-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center">
+                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                  </div>
+                  <span className="block text-gray-600 px-3 py-2">{user.username || user.email}</span>
+                </div>
                 <button
                   onClick={() => { logout(); setIsOpen(false); }}
-                  className="w-full text-left px-3 py-2 rounded text-gray-700 hover:bg-gray-100"
+                  className="w-full text-left px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
                 >
                   Logout
                 </button>
               </>
             ) : (
               <>
-                <Link to="/login" className="block text-blue-600 px-3 py-2 rounded hover:bg-gray-100" onClick={toggleMenu}>Login</Link>
-                <Link to="/signup" className="block text-white bg-blue-600 px-3 py-2 rounded hover:bg-blue-700" onClick={toggleMenu}>Sign Up</Link>
+                <Link to="/login" className="block text-blue-600 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors" onClick={toggleMenu}>Login</Link>
+                <Link to="/signup" className="block text-white bg-linear-to-r from-blue-600 to-indigo-600 px-3 py-2 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-colors" onClick={toggleMenu}>Sign Up</Link>
               </>
             )}
           </div>
