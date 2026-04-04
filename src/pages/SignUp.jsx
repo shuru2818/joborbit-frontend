@@ -120,8 +120,8 @@ const SignUp = () => {
 
   if (isRegistered) {
     return (
-      <div className="min-h-screen bg-linear-to-br from-green-50 via-white to-emerald-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-md w-full space-y-8 text-center">
+      <div className="min-h-screen bg-linear-to-br from-green-50 via-white to-emerald-50 flex items-center justify-center py-6 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md w-full space-y-6 text-center">
           <div className="mx-auto h-16 w-16 bg-linear-to-r from-green-600 to-emerald-600 rounded-full flex items-center justify-center shadow-lg">
             <svg className="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -144,20 +144,20 @@ const SignUp = () => {
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center py-6 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-6">
         <div className="text-center">
-          <img src="/Logo.jpeg" alt="Job Orbit Logo" className="mx-auto h-20 w-20 object-cover rounded-2xl shadow-2xl border-4 border-white" />
-          <h2 className="mt-8 text-4xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
+          <img src="/Logo.jpeg" alt="Job Orbit Logo" className="mx-auto h-16 w-16 object-cover rounded-2xl shadow-2xl border-4 border-white" />
+          <h2 className="mt-6 text-3xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
             Join Job Orbit
           </h2>
-          <p className="mt-3 text-lg text-gray-600">
+          <p className="mt-2 text-base text-gray-600">
             Start your journey to career success
           </p>
         </div>
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="bg-white/80 backdrop-blur-sm py-10 px-8 shadow-2xl rounded-3xl border border-white/20">
+        <form className="mt-6 space-y-5" onSubmit={handleSubmit}>
+          <div className="bg-white/80 backdrop-blur-sm py-8 px-6 shadow-2xl rounded-3xl border border-white/20">
             {error && (
               <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm flex items-center">
                 <svg className="w-5 h-5 mr-2 text-red-500" fill="currentColor" viewBox="0 0 20 20">
@@ -186,7 +186,7 @@ const SignUp = () => {
                     required
                     value={formData.username}
                     onChange={handleChange}
-                    className={`appearance-none relative block w-full pl-12 pr-4 py-4 border text-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:z-10 sm:text-sm transition-all duration-200 ${
+                    className={`appearance-none relative block w-full pl-12 pr-4 py-3 border text-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:z-10 sm:text-sm transition-all duration-200 ${
                       fieldErrors.username
                         ? 'border-red-300 focus:ring-red-500 focus:border-red-500 bg-red-50'
                         : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 bg-gray-50 focus:bg-white'
@@ -222,7 +222,7 @@ const SignUp = () => {
                     required
                     value={formData.email}
                     onChange={handleChange}
-                    className={`appearance-none relative block w-full pl-12 pr-4 py-4 border text-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:z-10 sm:text-sm transition-all duration-200 ${
+                    className={`appearance-none relative block w-full pl-12 pr-4 py-3 border text-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:z-10 sm:text-sm transition-all duration-200 ${
                       fieldErrors.email
                         ? 'border-red-300 focus:ring-red-500 focus:border-red-500 bg-red-50'
                         : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 bg-gray-50 focus:bg-white'
@@ -258,7 +258,7 @@ const SignUp = () => {
                     required
                     value={formData.password}
                     onChange={handleChange}
-                    className={`appearance-none relative block w-full pl-12 pr-12 py-4 border text-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:z-10 sm:text-sm transition-all duration-200 ${
+                    className={`appearance-none relative block w-full pl-12 pr-12 py-3 border text-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:z-10 sm:text-sm transition-all duration-200 ${
                       fieldErrors.password
                         ? 'border-red-300 focus:ring-red-500 focus:border-red-500 bg-red-50'
                         : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 bg-gray-50 focus:bg-white'
@@ -298,11 +298,11 @@ const SignUp = () => {
               </div>
             </div>
 
-            <div className="mt-8">
+            <div className="mt-6">
               <button
                 type="submit"
                 disabled={loading}
-                className="group relative w-full flex justify-center py-4 px-6 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1"
+                className="group relative w-full flex justify-center py-3 px-5 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1"
               >
                 {loading ? (
                   <div className="flex items-center">
